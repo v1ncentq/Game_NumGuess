@@ -1,27 +1,29 @@
-import '@testing-library/jest-dom';
+const { TextEncoder, TextDecoder } = require('node:util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
-// Імітація DOM
-const html = `
-  <input id="digits" />
-  <span id="maxPosition">5</span>
-  <input id="position" max="5" />
-  <div id="result"></div>
-  <div id="historyList"></div>
-  <span id="historyCount"></span>
-`;
-
-beforeEach(() => {
-  document.body.innerHTML = html;
+// Теперь подключаем JSDOM
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<!DOCTYPE html>', {
+  url: 'http://localhost',
+  pretendToBeVisual: true
 });
 
-// Імітація localStorage
-class LocalStorageMock {
-  constructor() {
+global.window = dom.window;
+global.document = dom.window.document;
+global.navigator = dom.window.navigator;
+
+
+// Мок localStorage
+global.localStorage = {
+  store: {},
+  getItem(key) {
+    return this.store[key] || null;
+  },
+  setItem(key, value) {
+    this.store[key] = value.toString();
+  },
+  clear() {
     this.store = {};
   }
-  getItem = (key) => this.store[key] || null;
-  setItem = (key, value) => this.store[key] = value;
-  clear = () => this.store = {};
-}
-
-global.localStorage = new LocalStorageMock();
+};

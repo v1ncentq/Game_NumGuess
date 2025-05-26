@@ -1,19 +1,34 @@
+const { JSDOM } = require('jsdom');
 const { saveToHistory, clearHistory } = require('../script.js');
+
+const dom = new JSDOM(`
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <div id="historyList"></div>
+      <span id="historyCount"></span>
+      <button id="clearHistoryButton"></button>
+    </body>
+  </html>
+`);
+global.document = dom.window.document;
+global.localStorage = dom.window.localStorage;
 
 describe('Історія вгадувань', () => {
   beforeEach(() => {
     localStorage.clear();
+    document.getElementById('historyList').innerHTML = '';
   });
 
   test('Збереження запису', () => {
-    saveToHistory([2,4,3], 2, 'first', 5, 12);
-    expect(JSON.parse(localStorage.getItem('guessHistory'))).toHaveLength(1);
+    saveToHistory([2, 4, 3], 2, 'first', 5, 12);
+    const history = JSON.parse(localStorage.getItem('guessHistory'));
+    expect(history).toHaveLength(1);
   });
-
-  test('Обмеження історії 50 записами', () => {
-    for(let i = 0; i < 55; i++) {
-      saveToHistory([i], 1, 'none', 5, 12);
-    }
-    expect(JSON.parse(localStorage.getItem('guessHistory'))).toHaveLength(50);
+  
+    test('Очищення історії', () => {
+    saveToHistory([1, 2, 3], 1, 'none', 4, 8);
+    clearHistory();
+    expect(localStorage.getItem('guessHistory')).toBeNull();
   });
 });

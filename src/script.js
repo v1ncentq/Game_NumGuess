@@ -1,8 +1,8 @@
-import {
+const { 
   calculateHiddenDigit,
   calculateSecretNumber,
-  validateInput
-} from './core/logic.js';
+  validateInput 
+} = require('./core/logic.js');
 
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints;
 let guessHistory = [];
@@ -20,6 +20,8 @@ if (typeof window !== 'undefined') {
     document.getElementById('maxPosition').textContent = digits.length;
     document.getElementById('position').max = digits.length;
   });
+
+  document.addEventListener('DOMContentLoaded', updateHistoryDisplay);
 }
 try {
   const storedHistory = localStorage.getItem('guessHistory');
@@ -59,9 +61,6 @@ function showResults() {
         resultSection.style.transform = 'translateY(0)';
     }, 300);
 }
-
-// Винесення логіки в окремі функції
-
 
 // Викликати showResults() після обчислень
 function calculate() {
@@ -125,36 +124,6 @@ function calculate() {
     saveToHistory(digits, position, rounding, hiddenDigit, secretNumber);
 }
 
-export const BusinessLogic = {
-  calculateHiddenDigit: (digits, hiddenIndex, modifier) => {
-    const knownSum = digits.filter((_, i) => i !== hiddenIndex).reduce((a, b) => a + b, 0);
-    const total = knownSum + modifier;
-    const nextMultiple = Math.ceil(total / 9) * 9;
-    return nextMultiple - total === 0 ? 9 : nextMultiple - total;
-  },
-
-  calculateSecretNumber: (allDigitsSum, modifier) => {
-    return Math.floor((allDigitsSum + modifier) / 9 * 4);
-  },
-
-  validateInput: (digitsInput, position, digitsLength) => {
-    const errors = [];
-    const digits = digitsInput.split(',').map(d => parseInt(d.trim()));
-    
-    if (digits.length < 2 || digits.length > 5) {
-      errors.push('Мінімальна кількість цифр — 2, максимальна -5');
-    }
-    if (digits.some(d => isNaN(d) || d < 0 || d > 9)) {
-      errors.push('Цифри повинні бути від 0 до 9');
-    }
-    if (isNaN(position) || position < 1 || position > digitsLength) {
-      errors.push('Невірний розряд прихованої цифри');
-    }
-    
-    return { isValid: errors.length === 0, errors };
-  }
-};
-
 function updateHistoryDisplay() {
     const historyList = document.getElementById('historyList');
     const historyCount = document.getElementById('historyCount');
@@ -203,9 +172,4 @@ function saveToHistory(digits, position, rounding, hiddenDigit, secretNumber) {
     updateHistoryDisplay();
 }
 
-// В кінці функції calculate(), після виведення результатів додаємо:
-saveToHistory(digits, position, rounding, hiddenDigit, secretNumber);
-
-// При завантаженні сторінки:
-document.addEventListener('DOMContentLoaded', updateHistoryDisplay);
 

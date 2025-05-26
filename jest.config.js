@@ -1,7 +1,13 @@
 module.exports = {
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["./jest.setup.js"],
   transform: {
-    '^.+\\.js$': 'babel-jest'
-  }
+    "^.+\\.js$": "babel-jest"
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1' // Для абсолютных путей (если нужно)
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(whatwg-url)/)" // Дозволяє трансформувати whatwg-url
+  ]
 };

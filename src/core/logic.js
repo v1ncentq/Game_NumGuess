@@ -1,4 +1,5 @@
-export const calculateHiddenDigit = (digits, hiddenIndex, modifier) => {
+
+const calculateHiddenDigit = (digits, hiddenIndex, modifier) => {
   const knownSum = digits.filter((_, i) => i !== hiddenIndex).reduce((a, b) => a + b, 0);
   const total = knownSum + modifier;
   const nextMultiple = Math.ceil(total / 9) * 9;
@@ -6,11 +7,11 @@ export const calculateHiddenDigit = (digits, hiddenIndex, modifier) => {
   return hiddenDigit === 0 ? 9 : hiddenDigit; // Повертаємо коректне значення
 };
 
-export const calculateSecretNumber = (allDigitsSum, modifier) => {
+const calculateSecretNumber = (allDigitsSum, modifier) => {
   return Math.floor((allDigitsSum + modifier) / 9 * 4);
 };
 
-export const validateInput = (digits, position, maxPosition) => {
+const validateInput = (digits, position, maxPosition) => {
   const errors = [];
   
   if (digits.length < 2 || digits.length > 5) {
@@ -26,4 +27,11 @@ export const validateInput = (digits, position, maxPosition) => {
   }
   
   return errors;
+
+};
+
+  module.exports = {
+  calculateHiddenDigit,
+  calculateSecretNumber,
+  validateInput
 };

@@ -1,4 +1,4 @@
-const { calculateHiddenDigit, calculateSecretNumber } = require('../script.js');
+const { calculateHiddenDigit, calculateSecretNumber } = require('../core/logic.js');
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
 
@@ -12,10 +12,13 @@ describe('Калькулятор чисел', () => {
     const digits = [2, 4, 3];
     const modifier = 6;
     const hiddenIndex = 1;
-    expect(calculateHiddenDigit(digits, hiddenIndex, modifier)).toBe(5);
+    expect(calculateHiddenDigit(digits, hiddenIndex, modifier)).toBe(7);
   });
 
   test('Розрахунок секретного числа', () => {
-    expect(calculateSecretNumber(15, 6)).toBe(12);
+    expect(calculateSecretNumber(15, 6)).toBe(9);
   });
+  test('Секретне число з великим модифікатором', () => {
+    expect(calculateSecretNumber(100, 20)).toBe(53); // (100+20)/9*4=120/9*4≈53.33→53
+});
 });
